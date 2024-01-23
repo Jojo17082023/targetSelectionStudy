@@ -35,7 +35,7 @@ public class Main_K : MonoBehaviour
     [SerializeField]
     public bool hasConditionFinishedFlag;
     public GameObject[] gameObjectsArray;
-    [SerializeField] private TextMeshProUGUI countdownText; // Assign this in the Inspector
+    [SerializeField] private TextMeshProUGUI countdownText; 
     public GameObject endGameObject;
     private float countdownTime = 5.0f; // Starting countdown time
     public GameObject[] targets; // Array of target GameObjects
@@ -148,9 +148,9 @@ public class Main_K : MonoBehaviour
     {
         int[] order = new int[totalConditions];
 
-        // Erzeugen Sie eine Liste von Konditionen in zufälliger Reihenfolge für jeden Teilnehmer
+        
         List<int> conditionList = Enumerable.Range(1, totalConditions).ToList();
-        System.Random random = new System.Random(participantId); // Verwenden Sie die Teilnehmer-ID als Seed für die Zufallszahlengenerierung
+        System.Random random = new System.Random(participantId); 
         conditionList = conditionList.OrderBy(x => random.Next()).ToList();
 
         for (int i = 0; i < totalConditions; i++)
@@ -299,12 +299,12 @@ public class Main_K : MonoBehaviour
     }
     private IEnumerator Countdown()
     {
-        // Ensure countdownTime is reset to 5 at the start
+       
         countdownTime = 5.0f;
 
         while (countdownTime > 0)
         {
-            countdownText.text = countdownTime.ToString("F0"); // Display the countdown as a whole number
+            countdownText.text = countdownTime.ToString("F0"); 
             yield return new WaitForSeconds(1.0f);
             countdownTime -= 1.0f;
         }
@@ -370,7 +370,7 @@ public class Main_K : MonoBehaviour
                     else
                     {
                         
-                        // Logik für das Ende des Experiments
+                        
 
                         Debug.Log("Questionnaire");
                     }
@@ -418,7 +418,7 @@ public class Main_K : MonoBehaviour
     }
     private void StartNewRound()
     {
-        currentRoundTargetSize = UnityEngine.Random.Range(minTargetSize, maxTargetSize); // Bestimme eine zufällige Größe für diese Runde
+        currentRoundTargetSize = UnityEngine.Random.Range(minTargetSize, maxTargetSize); 
         AdjustTargetSizes(); // Setze die Größe aller Targets für die neue Runde
         InitializeTargets(); // Initialisiere die Targets für die neue Runde
     }
@@ -426,11 +426,11 @@ public class Main_K : MonoBehaviour
 
     private float CalculateScaleFactor(int round)
     {
-        float startValue = 2.0f; // Twice the size
-        float endValue = 0.5f; // Half the size
+        float startValue = 2.0f; 
+        float endValue = 0.5f; 
         int totalRounds = 7;
 
-        // Linear interpolation from startValue to endValue over totalRounds
+        
         return startValue + ((float)round / (totalRounds - 1)) * (endValue - startValue);
     }
 
@@ -536,7 +536,7 @@ public class Main_K : MonoBehaviour
         isActiveVibration = vibration;
         isActiveVisuals = visuals;
         isActiveEyeGaze = eyeGaze;
-        isActiveHeadRaycast = !eyeGaze; // HeadRaycast is the inverse of EyeGaze
+        isActiveHeadRaycast = !eyeGaze; 
 
     }
 
@@ -556,7 +556,7 @@ public class Main_K : MonoBehaviour
     {
         if (isActiveEyeTracking)
         {
-            // Nehmen wir an, dass Sie eine Weise haben, das derzeit vom Eye-Tracking anvisierte Objekt zu bestimmen
+            
             GameObject currentLookedAtObject = null;
             foreach (GameObject target in targets)
             {
@@ -660,7 +660,7 @@ public class Main_K : MonoBehaviour
                 // Überprüfen, ob das EMG ausgelöst wird
                 if (pluxUnityInterface.isTriggering())
                 {
-                    TargetSelected(hitObject); // Rufe die TargetSelected-Methode auf, wenn das EMG ausgelöst wird
+                    TargetSelected(hitObject); 
                 }
 
                 // Färbe das anvisierte Objekt rot, wenn visuals aktiv sind
@@ -721,7 +721,7 @@ public class Main_K : MonoBehaviour
         else if (!shouldVibrate && isCurrentlyVibrating)
         {
             Debug.Log("Stopping Vibration");
-            // Hier könnte ein Befehl gesendet werden, um die Vibration zu stoppen
+            
             isCurrentlyVibrating = false;
         }
     }
@@ -730,13 +730,13 @@ public class Main_K : MonoBehaviour
         if (shouldEmitEMS && !isCurrentlyEmittingEMS)
         {
             Debug.Log("Starting EMS");
-            serialController.SendSerialMessage("A"); // Starte EMS
+            serialController.SendSerialMessage("A"); 
             isCurrentlyEmittingEMS = true;
         }
         else if (!shouldEmitEMS && isCurrentlyEmittingEMS)
         {
             Debug.Log("Stopping EMS");
-            // Hier könnte ein Befehl gesendet werden, um EMS zu stoppen
+           
             isCurrentlyEmittingEMS = false;
         }
     }
@@ -746,13 +746,13 @@ public class Main_K : MonoBehaviour
         if (shouldEmitEMS && shouldVibrate && !isCurrentlyEmittingEMS)
         {
             Debug.Log("Starting EMS & Vibraiton");
-            serialController.SendSerialMessage("B"); // Starte EMS
+            serialController.SendSerialMessage("B"); 
             isCurrentlyEmittingEMS = true;
         }
         else if (!shouldEmitEMS && !shouldVibrate && isCurrentlyEmittingEMS)
         {
             Debug.Log("Stopping EMS & Vibration");
-            // Hier könnte ein Befehl gesendet werden, um EMS zu stoppen
+            
             isCurrentlyEmittingEMS = false;
         }
     }
@@ -764,22 +764,22 @@ public class Main_K : MonoBehaviour
         float distanceToTarget = Vector3.Distance(startPoint, targetPosition);
         float targetSize = hitObject.transform.localScale.x;
 
-        double a = 0.225; // Beispielwert für 'a'
-        double b = 0.1175; // Beispielwert für 'b'
+        double a = 0.225; 
+        double b = 0.1175; 
 
         double maxvalue = pluxUnityInterface.maxvalue;
         double threshold_l = pluxUnityInterface.threshold_l;
         double threshold_h = pluxUnityInterface.threshold_h;
         
-        // Berechnung der Entfernung zum Ziel
+        
         
 
-        // Bewegungszeit: Zeit vom Start der Bewegung bis zum Treffen des Ziels
-        // Annahme: Die Startzeit wird irgendwo erfasst, z.B. beim Beginn der Runde
+        
+        
         
 
         // Fitts' Law Berechnung
-        double indexDifficulty = Mathf.Log((distanceToTarget / targetSize) + 1) / Mathf.Log(2); // Logarithmus Basis 2
+        double indexDifficulty = Mathf.Log((distanceToTarget / targetSize) + 1) / Mathf.Log(2); 
         double MT = a + b * indexDifficulty; // Berechnung von MT
 
         Debug.Log("Größe Objekt: " + targetSize);
